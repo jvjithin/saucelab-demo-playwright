@@ -1,0 +1,17 @@
+{
+  "name": "saucelab-demo-playwright",
+  "version": "1.0.0",
+  "description": "Automated test suite for Sauce Labs demo website using Playwright and TypeScript",
+  "scripts": {
+    "test": "playwright test",
+    "test:report": "playwright show-report test-results"
+  },
+  "keywords": ["playwright", "automation", "saucedemo", "typescript"],
+  "author": "Jithin Vishnu R",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.49.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.2"
+  }
+}

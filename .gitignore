@@ -1,0 +1,29 @@
+# Node.js dependencies
+node_modules/
+package-lock.json
+
+# Playwright test results and reports
+test-results/
+playwright-report/
+*.log
+
+# Build and cache files
+dist/
+.cache/
+out/
+
+# TypeScript temporary files
+*.tsbuildinfo
+
+# Environment variables
+.env
+.env.local
+
+# IDE and Editor Files
+.vscode/
+.idea/
+*.iml
+
+# OS-specific files
+.DS_Store
+Thumbs.db
