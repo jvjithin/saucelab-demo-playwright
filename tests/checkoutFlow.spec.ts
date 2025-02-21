@@ -1,41 +1,75 @@
 import { test, expect } from '@playwright/test';
+import { LoginPage } from '../src/pages/LoginPage';
+import { InventoryPage } from '../src/pages/InventoryPage';
+import { CartPage } from '../src/pages/CartPage';
+import { CheckoutPage } from '../src/pages/CheckoutPage';
+import { TestData } from '../config/testData';
+import { Logger } from '../src/utils/logger';
 
-test.describe('Sauce Labs Checkout Flow', () => {
-    const USERNAME = 'standard_user';
-    const PASSWORD = 'secret_sauce';
+test.describe('Sauce Demo Checkout Flow', () => {
+    let loginPage: LoginPage;
+    let inventoryPage: InventoryPage;
+    let cartPage: CartPage;
+    let checkoutPage: CheckoutPage;
 
-    test('should complete the checkout flow with 3 random items', async ({ page }) => {
-        // Step 1: Log in to the website
-        await page.goto('/');
-        await page.fill('[data-test="username"]', USERNAME);
-        await page.fill('[data-test="password"]', PASSWORD);
-        await page.click('[data-test="login-button"]');
+    test.beforeAll(async () => {
+        Logger.info('Starting Sauce Demo Checkout Flow Test Suite');
+    });
 
-        // Step 2: Add 3 random items to the cart
-        const items = await page.$$('.inventory_item button');
-        for (let i = 0; i < 3; i++) {
-            await items[i].click();
+    test.beforeEach(async ({ page }, testInfo) => {
+        Logger.setCurrentTest(testInfo.title);
+        Logger.info('Initializing page objects');
+        loginPage = new LoginPage(page);
+        inventoryPage = new InventoryPage(page);
+        cartPage = new CartPage(page);
+        checkoutPage = new CheckoutPage(page);
+    });
+
+    // eslint-disable-next-line no-empty-pattern
+    test.afterEach(async ({}, testInfo) => {
+        Logger.info(`Test finished with status: ${testInfo.status}`);
+        if (testInfo.status !== 'passed') {
+            Logger.error(`Test failed: ${testInfo.error?.message}`);
         }
+    });
 
-        // Step 3: Navigate to the cart and verify the items
-        await page.click('.shopping_cart_link');
-        const cartItems = await page.$$('.cart_item');
-        expect(cartItems.length).toBe(3);
+    test('complete purchase flow with multiple items', async () => {
+        Logger.info('Starting purchase flow test');
 
-        // Step 4: Proceed to checkout
-        await page.click('[data-test="checkout"]');
-        await page.fill('[data-test="firstName"]', 'John');
-        await page.fill('[data-test="lastName"]', 'Doe');
-        await page.fill('[data-test="postalCode"]', '12345');
-        await page.click('[data-test="continue"]');
+        // Login
+        Logger.info('Performing login');
+        await loginPage.navigate();
+        await loginPage.login(
+            TestData.login.validUser.username,
+            TestData.login.validUser.password
+        );
 
-        // Step 5: Verify checkout overview and complete the order
-        const overviewItems = await page.$$('.cart_item');
-        expect(overviewItems.length).toBe(3);
-        await page.click('[data-test="finish"]');
+        // Add items to cart
+        Logger.info('Adding items to cart');
+        await inventoryPage.addRandomItemsToCart(2);
+        await inventoryPage.navigateToCart();
 
-        // Step 6: Verify order confirmation
-        const confirmationText = await page.textContent('.complete-header');
-        expect(confirmationText).toEqual('Thank you for your order!');
+        // Verify cart and checkout
+        Logger.info('Verifying cart items');
+        const cartItemCount = await cartPage.getCartItemCount();
+        expect(cartItemCount).toBe(2);
+        await cartPage.proceedToCheckout();
+
+        // Complete checkout
+        Logger.info('Completing checkout process');
+        const { firstName, lastName, postalCode } = TestData.checkout.shippingDetails;
+        await checkoutPage.fillShippingDetails(firstName, lastName, postalCode);
+        
+        // Verify overview and complete order
+        Logger.info('Verifying order overview');
+        const overviewItemCount = await checkoutPage.getOverviewItemCount();
+        expect(overviewItemCount).toBe(2);
+        
+        Logger.info('Completing order');
+        await checkoutPage.completeOrder();
+        const confirmMessage = await checkoutPage.getConfirmationMessage();
+        expect(confirmMessage).toBe('Thank you for your order!');
+        
+        Logger.info('Purchase flow test completed successfully');
     });
 });

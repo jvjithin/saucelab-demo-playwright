@@ -1,17 +1,42 @@
 {
   "name": "saucelab-demo-playwright",
   "version": "1.0.0",
-  "description": "Automated test suite for Sauce Labs demo website using Playwright and TypeScript",
+  "description": "Playwright test framework for Sauce Labs demo site",
   "scripts": {
     "test": "playwright test",
-    "test:report": "playwright show-report test-results"
+    "test:dev": "cross-env NODE_ENV=dev playwright test",
+    "test:staging": "cross-env NODE_ENV=staging playwright test",
+    "test:prod": "cross-env NODE_ENV=prod playwright test",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui",
+    "test:debug": "playwright test --debug",
+    "test:parallel": "playwright test --workers=${npm_config_workers:-5}",
+    "report": "playwright show-report",
+    "report:html": "playwright show-report playwright-report",
+    "report:junit": "cat test-results/junit-report.xml",
+    "codegen": "playwright codegen",
+    "install:browsers": "playwright install",
+    "clean": "rimraf test-results/ playwright-report/ allure-results/",
+    "lint": "eslint \"**/*.ts\""
   },
-  "keywords": ["playwright", "automation", "saucedemo", "typescript"],
+  "keywords": [
+    "playwright",
+    "automation",
+    "saucedemo",
+    "typescript"
+  ],
   "author": "Jithin Vishnu R",
   "license": "ISC",
   "devDependencies": {
-    "@playwright/test": "^1.49.1",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.7.2"
+    "@playwright/test": "^1.41.2",
+    "@types/node": "^20.11.19",
+    "@typescript-eslint/eslint-plugin": "^8.24.1",
+    "@typescript-eslint/parser": "^8.24.1",
+    "allure-playwright": "^2.12.0",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.4.7",
+    "eslint": "^8.56.0",
+    "rimraf": "^5.0.5",
+    "typescript": "^5.3.3"
   }
 }
