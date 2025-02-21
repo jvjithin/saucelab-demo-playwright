@@ -25,14 +25,14 @@ test.describe('Sauce Demo Checkout Flow', () => {
         checkoutPage = new CheckoutPage(page);
     });
 
-    test.afterEach(async ({}, testInfo) => {
+    test.afterEach(async (testInfo) => {
         Logger.info(`Test finished with status: ${testInfo.status}`);
         if (testInfo.status !== 'passed') {
             Logger.error(`Test failed: ${testInfo.error?.message}`);
         }
     });
 
-    test('complete purchase flow with multiple items', async ({ page }) => {
+    test('complete purchase flow with multiple items', async () => {
         Logger.info('Starting purchase flow test');
 
         // Login

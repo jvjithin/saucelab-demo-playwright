@@ -17,7 +17,7 @@
     "codegen": "playwright codegen",
     "install:browsers": "playwright install",
     "clean": "rimraf test-results/ playwright-report/ allure-results/",
-    "lint": "eslint . --ext .ts"
+    "lint": "eslint \"**/*.ts\""
   },
   "keywords": [
     "playwright",
@@ -35,7 +35,7 @@
     "allure-playwright": "^2.12.0",
     "cross-env": "^7.0.3",
     "dotenv": "^16.4.7",
-    "eslint": "^9.20.1",
+    "eslint": "^8.56.0",
     "rimraf": "^5.0.5",
     "typescript": "^5.3.3"
   }

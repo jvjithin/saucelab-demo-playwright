@@ -16,4 +16,4 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Run ESLint
-        run: npx eslint . --ext .ts
+        run: npx eslint "**/*.ts"

@@ -1,4 +1,3 @@
-import { test } from '@playwright/test';
 import * as fs from 'fs';
 import * as path from 'path';
 
